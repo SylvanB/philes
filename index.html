@@ -1,0 +1,13 @@
+<html>
+    <head></head>
+    <body>
+        <h1>.: Phile Hosting :.</h1>
+        <h2>API Overview:</h2>
+        <p><code>GET /file/[id]</code> returns the image with the matching id.</p>
+        <p><code>POST /upload</code> will allow you to upload PNG/JPEG files. Returns the ID for the file.</p>
+        <form action="/upload" method="post", enctype="multipart/form-data">
+            <input type="file" id="uploadTarget" name="uploadTarget" >
+            <input type="submit" value="Upload" name="submit">
+        </form>
+    </body>
+</html>
