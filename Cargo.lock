@@ -730,6 +730,7 @@ dependencies = [
  "rocket",
  "rocket-multipart-form-data",
  "rocket_contrib",
+ "serde",
 ]
 
 [[package]]

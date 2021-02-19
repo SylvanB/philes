@@ -26,7 +26,7 @@ fn get_index() -> Option<String> {
 }
 
 fn main() {
-    let routes = routes![index, uploads::get_file, uploads::multipart_upload];
+    let routes = routes![index, uploads::get_file, uploads::multipart_upload, uploads::get_all_files];
 
     rocket::ignite().mount("/", routes).launch();
 }
