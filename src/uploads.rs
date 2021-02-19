@@ -1,11 +1,13 @@
 use nanoid::nanoid;
 use pickledb::{PickleDb, PickleDbDumpPolicy, SerializationMethod};
-use rocket::{get, http::ContentType, post, response::Stream, Data};
+use rocket::{Data, get, http::ContentType, post, response::Stream};
 use rocket_contrib::json::Json;
 use rocket_multipart_form_data::MultipartFormDataOptions;
 use rocket_multipart_form_data::{MultipartFormData, MultipartFormDataField};
 use serde::{Deserialize, Serialize};
 use std::{ffi::OsStr, fs::File, io::Write, path::Path};
+
+use crate::db::{Db};
 
 #[post("/file/upload", data = "<data>")]
 pub(crate) fn multipart_upload(content_type: &ContentType, data: Data) -> Result<String, &str> {
@@ -60,28 +62,14 @@ pub(crate) fn get_file(id: String) -> Option<Stream<File>> {
 
 #[get("/files")]
 pub(crate) fn get_all_files() -> Json<Vec<FileInfo>> {
-    let db = PickleDb::load(
-        "data.db",
-        PickleDbDumpPolicy::AutoDump,
-        SerializationMethod::Json,
-    )
-    .unwrap();
-
-    let ids = db.get_all();
-    let results = ids
-        .iter()
-        .map(|k| (k.to_owned(), db.get(k)))
-        .filter(|(_, v)| v.is_some())
-        .map(|(k, v)| FileInfo { id: k, location: v.unwrap() })
-        .collect();
-
+    let results = Db::new().get_all();
     Json(results)
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct FileInfo {
-    id: String,
-    location: String,
+    pub id: String,
+    pub location: String,
 }
 
 fn save_file(data: Vec<u8>, file_name: &String, id: &String) -> Result<String, &'static str> {
