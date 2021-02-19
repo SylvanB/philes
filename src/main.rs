@@ -3,36 +3,22 @@
 mod db;
 mod uploads;
 
-use rocket::{
-    get,
-    http::{hyper::StatusCode, ContentType},
-    response::Content,
-    routes,
-};
-use std::fs;
-
-#[get("/")]
-fn index() -> Result<Content<String>, StatusCode> {
-    let content = get_index();
-
-    if let Some(c) = content {
-        return Ok(Content(ContentType::HTML, c));
-    }
-
-    Err(StatusCode::NotFound)
-}
-
-fn get_index() -> Option<String> {
-    fs::read_to_string("index.html").ok()
-}
+use rocket::routes;
+use rocket_contrib::serve::StaticFiles;
 
 fn main() {
     let routes = routes![
-        index,
+        // index,
         uploads::get_file,
         uploads::get_all_files,
         uploads::multipart_upload,
     ];
 
-    rocket::ignite().mount("/", routes).launch();
+    rocket::ignite()
+        .mount(
+            "/",
+            StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static")),
+        )
+        .mount("/", routes)
+        .launch();
 }

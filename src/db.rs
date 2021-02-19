@@ -28,7 +28,8 @@ impl Db {
                 "data.db",
                 pickledb::PickleDbDumpPolicy::AutoDump,
                 pickledb::SerializationMethod::Json,
-            ).unwrap()
+            )
+            .unwrap(),
         }
     }
 }
