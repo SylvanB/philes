@@ -10,8 +10,11 @@ actix-web = "3"
 actix-multipart = "0.3.0"
 futures = "0.3.17"
 actix-cors = "0.5.4"
-# actix-web-static-files = "3.0"
+nanoid = "0.4.0"
+log = "0.4.1"
+async-trait = "0.1.51"
+actix-web-static-files = "3.0"
 
 
 [build-dependencies]
-# actix-web-static-files = "3.0"
+actix-web-static-files = "3.0"

@@ -1,0 +1,14 @@
+@import "../../colors.scss";
+
+.button {
+    border-radius: 5px;
+    background-color: $element-action-dark;
+    color: $text-colour-light;
+    border: none;
+    padding: 10px 20px;
+    max-width: 30%;
+}
+
+.button:hover {
+    cursor: pointer;
+}

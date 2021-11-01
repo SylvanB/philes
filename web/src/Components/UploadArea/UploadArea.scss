@@ -1,0 +1,18 @@
+@import "../../colors.scss";
+
+.UploadAreaContainer {
+    padding: 10px 0;
+    background-color: $element-bg-dark;
+    border-radius: 5px;
+    min-width: 50%;
+    margin: 25px 0;
+}
+
+.UploadAreaContainer-pointerActive {
+    cursor: pointer;
+}
+
+.UploadAreaContainer-drag {
+    background-color: $element-bg-light;
+    color: $text-colour-dark;
+}

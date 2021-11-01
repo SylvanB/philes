@@ -1,0 +1,21 @@
+@import "colors.scss";
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Iosevka", "Segoe UI",
+        "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
+}
+
+html {
+    background-color: $background;
+    color: $text-colour-light;
+    padding: 0 10% 0 10%;
+}

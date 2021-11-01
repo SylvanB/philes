@@ -1,0 +1,17 @@
+@import "../../colors.scss";
+
+.FileListItem {
+    display: flex;
+}
+
+.FileTitle {
+    word-wrap: break;
+    overflow: hidden;
+}
+
+.DeleteIcon {
+    padding-right: 10px;
+    fill: $brand-colour-light;
+    max-height: 20px;
+    align-self: center;
+}

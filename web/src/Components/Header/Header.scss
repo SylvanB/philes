@@ -1,0 +1,26 @@
+@import "../../colors.scss";
+
+.AppHeader {
+    min-height: 10vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.NavBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.NavItem > a {
+    padding: 0 10px;
+    text-decoration: none;
+    color: $text-colour-light;
+}
+
+.NavItem > a:hover {
+    color: $brand-colour-light;
+}
