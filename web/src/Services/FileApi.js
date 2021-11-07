@@ -4,7 +4,14 @@ class FileApi {
     }
 
     async getAll() {
-        return [{}, {}, {}];
+        let files = await fetch("/files", {
+            method: "GET",
+        })
+            .then(async (resp) => resp.json())
+            .catch((err) => []);
+
+        console.log(files);
+        return files;
     }
 
     async deleteById(id) {
@@ -12,15 +19,13 @@ class FileApi {
     }
 
     async upsert(newFiles) {
-        // Use fetch w/ each file to send off to backend.
-
         let formData = new FormData();
 
         for (const file in newFiles) {
             formData.append(`file${file}`, newFiles[file]);
         }
 
-        let req = new Request("http://localhost:8000/files", {
+        let req = new Request("/files", {
             method: "POST",
             body: formData,
         });

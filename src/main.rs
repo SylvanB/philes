@@ -2,7 +2,7 @@ mod keystore;
 
 use actix_cors::Cors;
 use actix_multipart::Multipart;
-use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer, Result};
+use actix_web::{get, guard, post, web, App, Error, HttpResponse, HttpServer, Result};
 use actix_web_static_files;
 use futures::{StreamExt, TryStreamExt};
 use keystore::{InMemoryKeyValueStore, KeyStore};
@@ -24,10 +24,7 @@ async fn upload(
     while let Ok(Some(mut field)) = payload.try_next().await {
         let content_type = field.content_disposition().unwrap();
         let filename = content_type.get_filename().unwrap();
-        let filepath = format!(
-            "/home/goldsoultheory/repos/philes-rs/philes-server/tmp/{}",
-            &filename
-        );
+        let filepath = format!("/home/goldsoultheory/repos/philes-rs/tmp/{}", &filename);
         let id = nanoid!();
 
         let mut f = web::block(move || std::fs::File::create(&filepath))
@@ -87,7 +84,10 @@ async fn main() -> std::io::Result<()> {
             .service(upload)
             .service(get_file)
             .service(get_files)
-            .service(actix_web_static_files::ResourceFiles::new("/", generated))
+            .service(
+                actix_web_static_files::ResourceFiles::new("/", generated)
+                    .resolve_not_found_to_root(),
+            )
     })
     .bind("127.0.0.1:8000")?
     .run()
