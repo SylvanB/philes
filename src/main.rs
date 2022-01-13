@@ -6,8 +6,10 @@ use actix_web::{get, guard, post, web, App, Error, HttpResponse, HttpServer, Res
 use actix_web_static_files;
 use futures::{StreamExt, TryStreamExt};
 use keystore::{InMemoryKeyValueStore, KeyStore};
+use log::info;
 use nanoid::nanoid;
 use std::collections::HashMap;
+use std::env;
 use std::io::Write;
 
 struct AppState {
@@ -72,9 +74,13 @@ include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init();
+
     let data = web::Data::new(AppState {
         value_store: InMemoryKeyValueStore::<String, String>::new(),
     });
+
+    let bind_target = "127.0.0.1:8000";
 
     HttpServer::new(move || {
         let generated = generate();
@@ -89,7 +95,7 @@ async fn main() -> std::io::Result<()> {
                     .resolve_not_found_to_root(),
             )
     })
-    .bind("127.0.0.1:8000")?
+    .bind(bind_target)?
     .run()
     .await
 }
