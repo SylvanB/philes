@@ -58,7 +58,7 @@ async fn get_file(
                 if file.read_to_end(&mut file_data).await.is_ok() {
                     Ok(HttpResponse::Ok()
                         .content_type("application/octet-stream")
-                        .header("Content-Disposition", format!("attachment; filename={}", path.file_name().unwrap().to_string_lossy()))
+                        .append_header(("Content-Disposition", format!("attachment; filename={}", path.file_name().unwrap().to_string_lossy())))
                         .body(file_data))
                 } else {
                     Ok(HttpResponse::InternalServerError().body("Failed to read the file"))
@@ -66,7 +66,6 @@ async fn get_file(
             }
             Err(_) => Ok(HttpResponse::NotFound().body("File not found")),
         }
-
     } else {
         Ok(HttpResponse::NotFound().into())
     }
