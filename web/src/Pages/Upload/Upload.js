@@ -71,7 +71,7 @@ class Upload extends React.Component {
 
     uploadFiles = async () => {
         if (this.state.files?.length > 0) {
-            this.fileApi.upsert(this.state.files);
+            await this.fileApi.upsert(this.state.files);
             this.setState({
                 files: [],
             });

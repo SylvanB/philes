@@ -1,7 +1,7 @@
 class FileApi {
-    async getById(id) {
-        return {};
-    }
+    // async getById(id) {
+    //     return {};
+    // }
 
     async getAll() {
         let files = await fetch("/files", {
@@ -14,9 +14,9 @@ class FileApi {
         return files;
     }
 
-    async deleteById(id) {
-        return true;
-    }
+    // async deleteById(id) {
+    //     return true;
+    // }
 
     async upsert(newFiles) {
         let formData = new FormData();

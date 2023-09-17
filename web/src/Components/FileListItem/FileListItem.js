@@ -4,7 +4,7 @@ import "./FileListItem.scss";
 
 class FileListItem extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             keyValue: props.keyValue,
         };
