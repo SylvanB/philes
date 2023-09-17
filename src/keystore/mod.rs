@@ -41,10 +41,7 @@ where
     }
 
     async fn get(&self, key: K) -> Option<V> {
-        match self.store.lock().await.get(&key) {
-            Some(v) => Some(v.clone()),
-            None => None,
-        }
+        self.store.lock().await.get(&key).map(|v| v.clone())
     }
 
     async fn get_all(&self) -> HashMap<K, V> {

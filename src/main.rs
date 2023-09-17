@@ -3,15 +3,14 @@ mod files;
 
 use actix_cors::Cors;
 use actix_multipart::Multipart;
-use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer, Result, Responder};
-use actix_web_static_files;
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Result};
 use futures::{TryStreamExt};
 use keystore::{InMemoryKeyValueStore, KeyStore};
 use std::collections::HashMap;
 use std::env;
 use std::path::Path;
 use tokio::fs::File;
-use tokio::io::{AsyncBufReadExt, AsyncReadExt, BufReader};
+use tokio::io::{AsyncReadExt};
 use crate::files::save_file_to_disk;
 
 struct AppState {
@@ -27,12 +26,12 @@ async fn upload(
 
     let kv_store = &state.value_store;
     while let Ok(Some(mut field)) = payload.try_next().await {
-        if let Err(_) = save_file_to_disk(kv_store, &mut added_files, &mut field).await {
+        if save_file_to_disk(kv_store, &mut added_files, &mut field).await.is_err() {
 
         }
     }
 
-    Ok(web::Json(added_files).into())
+    Ok(web::Json(added_files))
 }
 
 #[get("/files")]
@@ -87,7 +86,7 @@ async fn main() -> std::io::Result<()> {
         let generated = generate();
         App::new()
             .app_data(data.clone())
-            // .wrap(Cors::default().allow_any_origin().allow_any_method())
+            .wrap(Cors::default().allow_any_origin().allow_any_method())
             .service(upload)
             .service(get_file)
             .service(get_files)

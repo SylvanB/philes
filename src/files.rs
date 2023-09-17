@@ -10,7 +10,8 @@ use crate::keystore::{KeyStore, KeyStoreError};
 use futures::StreamExt;
 
 
-pub(crate) fn get_file_by_id(filepath: &PathBuf) -> Box<Path> {
+#[allow(dead_code)]
+pub(crate) fn get_file_by_id(_filepath: &Path) -> Box<Path> {
     todo!()
 }
 
@@ -49,7 +50,7 @@ pub(crate) async fn save_file_to_disk<TKvStore, K, V>(kv_store: &TKvStore, added
         Err(err) => {
             // We failed to update the KeyStore, we need to delete the file we just wrote to disk
             if let Err(err) = delete_file_from_disk(&filepath).await {
-                return Err(err)
+                Err(err)
             } else {
                 Err(FileError::KvStoreError(err))
             }
