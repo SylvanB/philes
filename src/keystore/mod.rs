@@ -65,17 +65,15 @@ where
             true => {
                 let curr_val = store.entry(key).or_insert(V::default());
                 *curr_val = value;
-                return Ok(());
             }
             false => {
                 store.insert(key, value);
-                return Ok(());
             }
         }
+        return Ok(());
     }
 }
 
 pub enum KeyStoreError {
     ValueNotPresent,
-    FailedToUpdateKeyValue,
 }

@@ -1,16 +1,15 @@
 mod keystore;
+mod files;
 
 use actix_cors::Cors;
 use actix_multipart::Multipart;
-use actix_web::{get, guard, post, web, App, Error, HttpResponse, HttpServer, Result};
+use actix_web::{get, post, web, App, Error, HttpResponse, HttpServer, Result};
 use actix_web_static_files;
-use futures::{StreamExt, TryStreamExt};
+use futures::{TryStreamExt};
 use keystore::{InMemoryKeyValueStore, KeyStore};
-use log::info;
-use nanoid::nanoid;
 use std::collections::HashMap;
 use std::env;
-use std::io::Write;
+use crate::files::save_file_to_disk;
 
 struct AppState {
     value_store: InMemoryKeyValueStore<String, String>,
@@ -23,30 +22,11 @@ async fn upload(
 ) -> Result<web::Json<HashMap<String, String>>> {
     let mut added_files: HashMap<String, String> = HashMap::new();
 
+    let kv_store = &state.value_store;
     while let Ok(Some(mut field)) = payload.try_next().await {
-        let content_type = field.content_disposition().unwrap();
-        let filename = content_type.get_filename().unwrap();
-        let filepath = format!("/home/goldsoultheory/repos/philes-rs/tmp/{}", &filename);
-        let id = nanoid!();
-
-        let mut f = web::block(move || std::fs::File::create(&filepath))
-            .await
-            .unwrap();
-
-        while let Some(chunk) = field.next().await {
-            let data = chunk.unwrap();
-            f = web::block(move || f.write_all(&data).map(|_| f)).await?;
+        if let Err(_) = save_file_to_disk(kv_store, &mut added_files, &mut field).await {
+            return Err(HttpResponse::InternalServerError().into())
         }
-
-        let store = &state.value_store;
-        match store
-            .upsert(id.clone(), format!("/tmp/philes.rs/{}", filename))
-            .await
-        {
-            // TODO: Actually do error handling
-            Ok(_) => added_files.insert(id, format!("/tmp/philes.rs/{}", &filename)),
-            Err(_) => return Err(HttpResponse::InternalServerError().into()),
-        };
     }
 
     Ok(web::Json(added_files))
