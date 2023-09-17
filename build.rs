@@ -1,4 +1,5 @@
-use actix_web_static_files::NpmBuild;
+use static_files::NpmBuild;
+
 
 fn main() {
     println!("cargo:rerun-if-changed=./web");
